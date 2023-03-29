@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PatientRouteController;
+use App\Http\Controllers\DoctorRouteController;
+use App\Http\Controllers\AdminRouteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,19 +18,51 @@ use App\Http\Controllers\HomeController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if(auth()->check())
+    {
+        if (auth()->user()->role == 'admin') {
+            return redirect()->route('admin.home');
+        }else if (auth()->user()->role == 'doctor') {
+            return redirect()->route('doctor.home');
+        } else{
+            return redirect()->route('patient.home');
+        }
+    } else 
+    {
+        return view('welcome');
+    }
 });
 
 Auth::routes();
-
 
 /*------------------------------------------
 --------------------------------------------
 All Normal Users Routes List
 --------------------------------------------
 --------------------------------------------*/
-Route::middleware(['auth', 'user-access:user'])->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::middleware(['auth', 'user-access:patient'])->group(function () {
+    
+    Route::get('/home', [PatientRouteController::class, 'home'])->name('patient.home');
+    Route::get('/profile', [PatientRouteController::class, 'profile']);
+    Route::get('/donor/create', [PatientRouteController::class, 'createDonor']);
+    Route::get('/doctors', [PatientRouteController::class, 'viewDoctors']);
+    Route::get('/donors', [PatientRouteController::class, 'viewDonors']);
+    Route::get('/appointments', [PatientRouteController::class, 'viewAppointments']);
+    Route::get('/appointment/create', [PatientRouteController::class, 'createAppointment']);
+    Route::get('/appointment/edit', [PatientRouteController::class, 'editAppointment']);
+});
+
+/*------------------------------------------
+--------------------------------------------
+All Doctor Routes List
+--------------------------------------------
+--------------------------------------------*/
+Route::middleware(['auth', 'user-access:doctor'])->group(function () {
+  
+    Route::get('/doctor/home', [DoctorRouteController::class, 'home'])->name('doctor.home');
+    Route::get('/doctor/patient-accounts', [DoctorRouteController::class, 'viewPatientAccounts']);
+    Route::get('/doctor/appointments', [DoctorRouteController::class, 'viewAppointments']);
+    Route::get('/doctor/description/create', [DoctorRouteController::class, 'createDescription']);
 });
   
 /*------------------------------------------
@@ -37,6 +71,12 @@ All Admin Routes List
 --------------------------------------------
 --------------------------------------------*/
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
-  
-    Route::get('/admin/home', [HomeController::class, 'adminHome'])->name('admin.home');
+
+    Route::get('/admin/home', [AdminRouteController::class, 'home'])->name('admin.home');
+    Route::get('/admin/doctor-accounts', [AdminRouteController::class, 'viewDoctorAccounts']);
+    Route::get('/admin/doctor-account/create', [AdminRouteController::class, 'createDoctorAccount']);
+    Route::get('/admin/doctor-account/edit', [AdminRouteController::class, 'editDoctorAccount']);
+    Route::get('/admin/patient-accounts', [AdminRouteController::class, 'viewPatientAccounts']);
+    Route::get('/admin/appointments', [AdminRouteController::class, 'viewAppointments']);
+    Route::get('/admin/donors', [AdminRouteController::class, 'viewDonors']);
 });

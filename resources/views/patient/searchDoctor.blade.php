@@ -14,7 +14,8 @@
                         </div>
                     @endif
 
-                    {{ __('User! You are logged in!') }}
+                    {{ __("Search Doctor") }}
+                    <a href="#" class="btn btn-primary">Search Doctor</a>
                 </div>
             </div>
         </div>
