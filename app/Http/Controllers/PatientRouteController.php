@@ -25,10 +25,6 @@ class PatientRouteController extends Controller
     {
         return view('patient.home');
     }
-    public function profile()
-    {
-        return view('patient.profile');
-    }
     public function createDonor()
     {
         return view('patient.donor.create');
@@ -52,25 +48,5 @@ class PatientRouteController extends Controller
     public function editAppointment()
     {
         return view('patient.appointment.edit');
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function doctorHome()
-    {
-        return view('doctorHome');
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function adminHome()
-    {
-        return view('admin.home');
     }
 }

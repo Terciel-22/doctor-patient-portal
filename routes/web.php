@@ -5,7 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PatientRouteController;
 use App\Http\Controllers\DoctorRouteController;
 use App\Http\Controllers\AdminRouteController;
-
+use App\Http\Controllers\PatientInfoController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,8 +29,20 @@ Route::get('/', function () {
         }
     } else 
     {
-        return view('welcome');
+        return redirect('login');
     }
+});
+
+Route::middleware(['auth'])->group(function() {
+    Route::get('/profile', function(){
+        if (auth()->user()->role == 'admin') {
+            return view('admin.profile');
+        }else if (auth()->user()->role == 'doctor') {
+            return view('doctor.profile');
+        } else{
+            return view('patient.profile');
+        }
+    });
 });
 
 Auth::routes();
@@ -41,15 +53,23 @@ All Normal Users Routes List
 --------------------------------------------
 --------------------------------------------*/
 Route::middleware(['auth', 'user-access:patient'])->group(function () {
-    
     Route::get('/home', [PatientRouteController::class, 'home'])->name('patient.home');
-    Route::get('/profile', [PatientRouteController::class, 'profile']);
     Route::get('/donor/create', [PatientRouteController::class, 'createDonor']);
     Route::get('/doctors', [PatientRouteController::class, 'viewDoctors']);
     Route::get('/donors', [PatientRouteController::class, 'viewDonors']);
     Route::get('/appointments', [PatientRouteController::class, 'viewAppointments']);
     Route::get('/appointment/create', [PatientRouteController::class, 'createAppointment']);
     Route::get('/appointment/edit', [PatientRouteController::class, 'editAppointment']);
+    Route::get('/insurance',function(){
+        return view('patient.insurance');
+    });
+    Route::get('/medical-history', function(){
+        return view('patient.medicalHistory');
+    });
+    Route::get('/profile/create',function(){
+        return view('patient.profile.create');
+    });
+    Route::resource('/profile_infos',PatientInfoController::class);
 });
 
 /*------------------------------------------
