@@ -7,7 +7,7 @@
             {{ session()->get('status') }}
         </div>
     @endif
-    <form method="POST" action="{{ url('/profile_infos') }}">
+    <form method="POST" action="{{ url('/patient_infos') }}">
         @csrf
         <input type="hidden" value="{{ auth()->user()->id }}" name="user_id">
         <h2>Patient Information</h2>

@@ -25,7 +25,7 @@ class PatientInfoController extends Controller
      */
     public function create()
     {
-        //
+        return view('patient.patient_infos.create');
     }
 
     /**
@@ -38,7 +38,7 @@ class PatientInfoController extends Controller
     {
         $validated = $request->validated();
         PatientInfo::create($validated);
-        return redirect('/profile')->with('status','Successfully saved information!');
+        return redirect('/patient_infos/'.auth()->user()->id)->with('status','Successfully saved information!');
     }
 
     /**
@@ -47,9 +47,10 @@ class PatientInfoController extends Controller
      * @param  \App\Models\PatientInfo  $patientInfo
      * @return \Illuminate\Http\Response
      */
-    public function show(PatientInfo $patientInfo)
+    public function show()
     {
-        //
+        $patientInfo = PatientInfo::query()->where('user_id',auth()->user()->id)->first();
+        return view('patient.patient_infos.show')->with('patientInfo',$patientInfo);
     }
 
     /**
@@ -58,9 +59,10 @@ class PatientInfoController extends Controller
      * @param  \App\Models\PatientInfo  $patientInfo
      * @return \Illuminate\Http\Response
      */
-    public function edit(PatientInfo $patientInfo)
+    public function edit()
     {
-        //
+        $patientInfo = PatientInfo::query()->where('user_id',auth()->user()->id)->first();
+        return view('patient.patient_infos.edit')->with('patientInfo',$patientInfo);
     }
 
     /**

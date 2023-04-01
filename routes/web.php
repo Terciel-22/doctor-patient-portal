@@ -40,7 +40,7 @@ Route::middleware(['auth'])->group(function() {
         }else if (auth()->user()->role == 'doctor') {
             return view('doctor.profile');
         } else{
-            return view('patient.profile');
+            return redirect('/patient_infos/'.auth()->user()->id);
         }
     });
 });
@@ -66,10 +66,7 @@ Route::middleware(['auth', 'user-access:patient'])->group(function () {
     Route::get('/medical-history', function(){
         return view('patient.medicalHistory');
     });
-    Route::get('/profile/create',function(){
-        return view('patient.profile.create');
-    });
-    Route::resource('/profile_infos',PatientInfoController::class);
+    Route::resource('/patient_infos',PatientInfoController::class);
 });
 
 /*------------------------------------------
